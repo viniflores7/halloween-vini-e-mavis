@@ -12,6 +12,16 @@ const violationMessages: Record<string, string> = {
   alreadyVoted: 'Você já votou.',
   invalidVote: 'Não dá para votar nessa pessoa.',
   votingOpen: 'A votação ainda está aberta.',
+  contestStarted: 'A votação já começou.',
+  contestFull: 'A sala está cheia.',
+  notEnoughParticipants: 'Precisa de pelo menos 4 participantes.',
+  notVoting: 'A votação já terminou.',
+  notParticipant: 'Você não está participando desta votação.',
+  invalidBallot: 'Esse voto não vale. Confere as escolhas?',
+  noVotes: 'Ninguém votou ainda.',
+  notRevealing: 'Não tem nada para revelar agora.',
+  notInResults: 'Espera o resultado sair.',
+  invalidGroups: 'Monte pelo menos 2 grupos de 2 ou 3 pessoas.',
 }
 
 const fallback = 'Não deu certo agora. Confere a internet e tenta de novo.'

@@ -1,0 +1,15 @@
+export const contestRevealContent = {
+  counting: 'Apurando os votos',
+  places: { 1: '1º lugar', 2: '2º lugar', 3: '3º lugar' } as Record<number, string>,
+  suspense: (place: string) => `E o ${place} vai para…`,
+  tie: 'Empate!',
+  points: (count: number) => (count === 1 ? '1 ponto' : `${count} pontos`),
+  votes: (count: number) => (count === 1 ? '1 voto' : `${count} votos`),
+  next: (place: number) => `Revelar ${place}º lugar`,
+  showResults: 'Revelar resultados',
+  waitingHost: 'Aguardando o anfitrião…',
+  resultsTitle: 'Resultado',
+  whoVotedWhom: 'Quem votou em quem',
+  didNotVote: 'não votou',
+  groupContest: 'Fantasia em dupla',
+}

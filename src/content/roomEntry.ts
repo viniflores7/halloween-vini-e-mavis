@@ -22,4 +22,17 @@ export const amongUsEntryContent = {
   ],
 }
 
+export const contestEntryContent = {
+  ...shared,
+  kicker: 'Concurso',
+  title: 'Melhor fantasia',
+  intro: 'Crie a sala de votação ou entre com o código que o anfitrião passar.',
+  create: 'Criar sala de votação',
+  howItWorks: [
+    'Todo mundo entra com uma foto da fantasia.',
+    'Cada um vota no 1º, 2º e 3º lugar (não vale votar em si mesmo).',
+    'O resultado é revelado com suspense, do 3º para o 1º lugar.',
+  ],
+}
+
 export type RoomEntryCopy = typeof amongUsEntryContent

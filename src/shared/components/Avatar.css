@@ -63,3 +63,12 @@
 .avatar--dead::after {
   transform: rotate(-45deg);
 }
+
+.avatar-stack {
+  display: inline-flex;
+  align-items: center;
+}
+
+.avatar-stack .avatar + .avatar {
+  margin-left: calc(var(--size) * -0.28);
+}

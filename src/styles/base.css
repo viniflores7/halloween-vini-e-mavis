@@ -136,6 +136,16 @@ h3 {
   }
 }
 
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-14deg);
+  }
+  70% {
+    transform: scale(1.12) rotate(3deg);
+  }
+}
+
 @keyframes pulse {
   50% {
     transform: scale(1.06);

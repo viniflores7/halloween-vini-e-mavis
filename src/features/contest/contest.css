@@ -1,0 +1,8 @@
+.contest-lobby {
+  gap: 1.4rem;
+}
+
+.contest-lobby__rules {
+  margin: 0;
+  text-align: center;
+}

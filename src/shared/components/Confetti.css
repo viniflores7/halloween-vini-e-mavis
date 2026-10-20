@@ -1,0 +1,23 @@
+.confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti span {
+  position: absolute;
+  top: -24px;
+  border-radius: 2px;
+  animation: confetti-fall linear 3 both;
+}
+
+@keyframes confetti-fall {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate(var(--drift), 110vh) rotate(900deg);
+  }
+}

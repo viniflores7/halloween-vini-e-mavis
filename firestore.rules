@@ -68,5 +68,54 @@ service cloud.firestore {
         );
       }
     }
+
+    // Concurso de fantasia: mesma ideia das salas, com foto obrigatória
+    match /contests/{code} {
+      function isMember() {
+        return request.auth.uid in resource.data.playerIds;
+      }
+
+      function isHost() {
+        return request.auth.uid == resource.data.hostId;
+      }
+
+      function isJoining() {
+        return resource.data.stage == 'lobby'
+          && changedKeys().hasOnly(['playerIds'])
+          && request.resource.data.playerIds == resource.data.playerIds.concat([request.auth.uid]);
+      }
+
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn()
+        && request.resource.data.code == code
+        && request.resource.data.hostId == request.auth.uid
+        && request.resource.data.playerIds.size() == 0
+        && request.resource.data.stage == 'lobby';
+      allow update: if signedIn()
+        && request.resource.data.code == code
+        && request.resource.data.playerIds.size() <= 40
+        && (isJoining() || (isMember() && (isHost() || !changedKeys().hasAny(['hostId', 'participants', 'groups']))));
+      allow delete: if false;
+
+      match /players/{playerId} {
+        allow read: if signedIn();
+        allow create, update: if signedIn()
+          && request.auth.uid == playerId
+          && exists(/databases/$(database)/documents/contests/$(code))
+          && request.resource.data.keys().hasOnly(['name', 'photo', 'joinedAt'])
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.name.size() <= 24
+          && request.resource.data.photo is string
+          && request.resource.data.photo.size() > 0
+          && request.resource.data.photo.size() <= 250000
+          && request.resource.data.joinedAt is number;
+        allow delete: if signedIn() && (
+          request.auth.uid == playerId
+          || request.auth.uid == get(/databases/$(database)/documents/contests/$(code)).data.hostId
+        );
+      }
+    }
   }
 }

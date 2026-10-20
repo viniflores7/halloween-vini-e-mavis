@@ -49,6 +49,37 @@ export function ReportIcon(props: SVGProps<SVGSVGElement>) {
   )
 }
 
+export function TrophyIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 64 72" aria-hidden="true" {...props}>
+      <path
+        d="M16 8h32v14c0 11-7 19-16 19s-16-8-16-19z"
+        fill="#d7b46a"
+        stroke="#2e2318"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 13H7c0 10 4 15 11 16M48 13h9c0 10-4 15-11 16"
+        fill="none"
+        stroke="#2e2318"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path d="M28 41h8v10h-8z" fill="#b8954f" stroke="#2e2318" strokeWidth="3" />
+      <path d="M18 51h28l3 12H15z" fill="#d7b46a" stroke="#2e2318" strokeWidth="3" strokeLinejoin="round" />
+      <path
+        d="M24 14c0 8 2 14 6 18"
+        fill="none"
+        stroke="#fff"
+        strokeOpacity="0.6"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
 export function SkullIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...stroked} {...props}>
