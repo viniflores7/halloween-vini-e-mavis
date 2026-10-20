@@ -1,4 +1,4 @@
-import { remainingMs } from './roundTimer'
+import { reachedTimeLimit } from './roundTimer'
 import {
   GameRuleError,
   SKIP_VOTE,
@@ -17,18 +17,15 @@ export const MEETING_ALERT_MS = 4_000
 export const OUTCOME_MS = 9_000
 
 export const SETTINGS_LIMITS = {
-  roundMinutes: { min: 3, max: 60, step: 1 },
   impostorCount: { min: 1, max: 3, step: 1 },
   emergencyMeetingsPerPlayer: { min: 0, max: 5, step: 1 },
   votingSeconds: { min: 30, max: 300, step: 15 },
 } as const
 
 export const DEFAULT_SETTINGS: RoomSettings = {
-  roundMinutes: 15,
   impostorCount: 1,
   emergencyMeetingsPerPlayer: 1,
   votingSeconds: 120,
-  timeUpWinner: 'crewmates',
 }
 
 export function newRoom(code: string, hostId: string, now: number): Room {
@@ -124,11 +121,9 @@ export function changeSettings(room: Room, actorId: string, settings: RoomSettin
   return {
     ...room,
     settings: {
-      roundMinutes: clamp('roundMinutes'),
       impostorCount: clamp('impostorCount'),
       emergencyMeetingsPerPlayer: clamp('emergencyMeetingsPerPlayer'),
       votingSeconds: clamp('votingSeconds'),
-      timeUpWinner: settings.timeUpWinner === 'impostors' ? 'impostors' : 'crewmates',
     },
   }
 }
@@ -161,7 +156,6 @@ export function startRound(room: Room, actorId: string, now: number, random: () 
     round: {
       number,
       startsAt: now + ROLE_REVEAL_MS,
-      durationMs: room.settings.roundMinutes * 60_000,
       pausedAt: null,
       pausedMs: 0,
       resumedAt: null,
@@ -179,7 +173,7 @@ function playingRound(room: Room, now: number): Round {
   const round = room.round
   if (room.status !== 'playing' || !round || now < round.startsAt) throw new GameRuleError('notPlaying')
   if (round.resumedAt && now < round.resumedAt) throw new GameRuleError('notPlaying')
-  if (remainingMs(round, now) <= 0) throw new GameRuleError('timeUp')
+  if (reachedTimeLimit(round, now)) throw new GameRuleError('timeLimitReached')
   return round
 }
 
@@ -273,12 +267,12 @@ export function closeVoting(room: Room, actorId: string, now: number): Room | nu
   return resolveMeeting(room, now)
 }
 
-// Chamado por todos os celulares quando o tempo acaba; só o primeiro efetivamente muda a sala
+// Chamado por todos os celulares quando um prazo vence; só o primeiro efetivamente muda a sala
 export function advanceByClock(room: Room, now: number): Room | null {
   const { round, meeting } = room
   if (room.status === 'meeting' && meeting && now >= meeting.votingEndsAt) return resolveMeeting(room, now)
-  if (room.status === 'playing' && round && now >= round.startsAt && remainingMs(round, now) <= 0) {
-    return endRound(room, { winner: room.settings.timeUpWinner, reason: 'timeUp' })
+  if (room.status === 'playing' && round && now >= round.startsAt && reachedTimeLimit(round, now)) {
+    return endRound(room, { winner: null, reason: 'timeLimit' })
   }
   return null
 }

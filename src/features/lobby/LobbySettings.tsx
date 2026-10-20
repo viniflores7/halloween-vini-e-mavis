@@ -54,31 +54,13 @@ export function LobbySettings({ room, editable }: LobbySettingsProps) {
   return (
     <section className="card settings">
       <h2 className="label settings__title">{copy.rules}</h2>
-      {stepper('roundMinutes', copy.roundMinutes, copy.minutes(draft.roundMinutes))}
       {stepper('impostorCount', copy.impostorCount, String(draft.impostorCount))}
       {draft.impostorCount > impostorLimit && (
         <p className="settings__hint muted small">{copy.impostorLimit(room.playerIds.length, impostorLimit)}</p>
       )}
       {stepper('emergencyMeetingsPerPlayer', copy.emergencyMeetings, String(draft.emergencyMeetingsPerPlayer))}
       {stepper('votingSeconds', copy.votingSeconds, formatVoting(draft.votingSeconds))}
-      <div className="setting setting--column">
-        <span className="setting__label">{copy.timeUpWinner}</span>
-        <div className="segmented" role="radiogroup" aria-label={copy.timeUpWinner}>
-          {(['crewmates', 'impostors'] as const).map((team) => (
-            <button
-              key={team}
-              type="button"
-              role="radio"
-              aria-checked={draft.timeUpWinner === team}
-              className={`segmented__option ${draft.timeUpWinner === team ? 'is-active' : ''}`}
-              disabled={!editable}
-              onClick={() => change({ timeUpWinner: team })}
-            >
-              {team === 'crewmates' ? copy.crewmates : copy.impostors}
-            </button>
-          ))}
-        </div>
-      </div>
+      <p className="settings__note muted small">{copy.roundLength}</p>
       {saving.error && <p className="error small">{saving.error}</p>}
     </section>
   )

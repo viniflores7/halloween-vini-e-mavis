@@ -3,11 +3,11 @@ import { describeError } from '@/content/errors'
 import { roundContent as copy } from '@/content/round'
 import {
   alivePlayerIds,
+  elapsedPlayMs,
   emergencyMeetingsLeft,
   getRoomRepository,
   impostorIds,
   isHost,
-  remainingMs,
   roleOf,
   type MeetingKind,
   type Player,
@@ -81,7 +81,7 @@ export function RoundScreen({ room, players, myId, now }: RoundScreenProps) {
         </div>
       )}
 
-      <RoundTimer remainingMs={remainingMs(round, now)} totalMs={round.durationMs} />
+      <RoundTimer elapsedMs={elapsedPlayMs(round, now)} />
 
       {amAlive && (
         <div className="round__actions">

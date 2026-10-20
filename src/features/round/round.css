@@ -54,7 +54,6 @@
   fill: none;
   stroke: var(--ink);
   stroke-width: 7;
-  transition: stroke-dashoffset 0.3s linear;
 }
 
 .timer__text {
@@ -73,18 +72,19 @@
   font-variant-numeric: tabular-nums;
 }
 
+.timer__clock--hours {
+  font-size: clamp(1.8rem, min(11vw, 5.5dvh), 3rem);
+}
+
 .timer__caption {
   font-size: 0.8rem;
   color: var(--ink-soft);
 }
 
-.timer--urgent .timer__progress {
+.timer--ending .timer__progress,
+.timer--ending .timer__caption {
   stroke: var(--blood);
-}
-
-.timer--urgent .timer__clock {
   color: var(--blood);
-  animation: pulse 1s ease-in-out infinite;
 }
 
 .round__actions {

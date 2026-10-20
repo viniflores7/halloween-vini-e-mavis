@@ -10,17 +10,15 @@ React + Vite, hospedado de graça na **Vercel**, com as salas no **Firebase Fire
 2. Os outros entram pelo código de 4 letras, pelo link (**Convidar**) ou pelo **QR code**. Até **15 jogadores** por sala.
 3. Cada um coloca o nome e tira uma foto com a fantasia (câmera frontal ou traseira; dá para escolher uma foto da galeria).
 4. O anfitrião ajusta as regras da rodada e toca em **Iniciar rodada**:
-   - duração (3 a 60 min);
    - quantidade de impostores (1 a 3; o app limita conforme o número de jogadores);
    - reuniões de emergência por pessoa;
-   - tempo de votação;
-   - quem vence se o tempo acabar.
-5. Cada celular mostra em segredo se a pessoa é **impostor** ou **tripulante** (impostores veem os comparsas). Depois disso aparece o timer, igual em todos os celulares.
+   - tempo de votação.
+5. Cada celular mostra em segredo se a pessoa é **impostor** ou **tripulante** (impostores veem os comparsas). Depois disso o timer começa do zero e conta o tempo de rodada, igual em todos os celulares.
 6. Tarefas e mortes são **presenciais**. No app, qualquer vivo pode:
    - **Convocar reunião de emergência**;
    - **Denunciar morte**, escolhendo quem foi encontrado morto.
 7. Na reunião o timer pausa, todo mundo recebe o alerta (com vibração) e os vivos votam em quem expulsar ou pulam o voto. O mais votado é ejetado (empate ou “pular” não ejeta ninguém).
-8. A rodada acaba quando todos os impostores saem, quando os impostores ficam em maioria ou quando o tempo acaba. O anfitrião volta todos para o lobby para a próxima.
+8. A rodada não tem duração fixa: acaba quando todos os impostores saem ou quando os impostores ficam em maioria. Por segurança, com **3 horas** de jogo ela é encerrada sem vencedor. O anfitrião volta todos para o lobby para a próxima.
 
 Durante a rodada a tela fica acesa (Wake Lock) e o botão **Segure para ver seu papel** mostra o papel só enquanto o dedo está na tela.
 

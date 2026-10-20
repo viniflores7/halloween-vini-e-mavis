@@ -7,7 +7,7 @@ const violationMessages: Record<string, string> = {
   notAlive: 'Fantasmas não podem fazer isso.',
   invalidVictim: 'Essa pessoa não pode ser denunciada.',
   noEmergencyLeft: 'Você já usou suas reuniões de emergência.',
-  timeUp: 'O tempo da rodada acabou.',
+  timeLimitReached: 'A rodada chegou ao limite de 3 horas.',
   notInMeeting: 'A votação já terminou.',
   alreadyVoted: 'Você já votou.',
   invalidVote: 'Não dá para votar nessa pessoa.',

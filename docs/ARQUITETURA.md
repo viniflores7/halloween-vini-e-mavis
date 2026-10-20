@@ -62,7 +62,7 @@ app ──► features ──► shared
 
 ## Regras do jogo e repositório
 
-Toda a lógica da partida está em `data/rooms/gameRules.ts`, em funções puras que recebem a sala e devolvem a sala nova (ou lançam `GameRuleError`): entrar, sortear impostores, convocar reunião, votar, encerrar votação, fim do tempo. O timer está em `data/rooms/roundTimer.ts`.
+Toda a lógica da partida está em `data/rooms/gameRules.ts`, em funções puras que recebem a sala e devolvem a sala nova (ou lançam `GameRuleError`): entrar, sortear impostores, convocar reunião, votar, encerrar votação, limite de 3 horas. O timer está em `data/rooms/roundTimer.ts`.
 
 `roomRepository.ts` aplica essas funções sobre um `RoomStore`, que só sabe ler e gravar:
 
@@ -76,8 +76,8 @@ No Firestore cada mudança roda numa transação, então votos simultâneos não
 ## Sincronização
 
 - **Tempo real**: cada celular escuta o documento da sala e a lista de jogadores (`onSnapshot`).
-- **Timer igual em todos**: a sala guarda o início da rodada e as pausas; cada celular calcula o tempo restante. Na entrada, o celular grava `clocks/{uid}` com o horário do servidor para corrigir a diferença do relógio dele.
-- **Avanço automático**: quando o tempo da rodada ou da votação acaba, o anfitrião grava a mudança na hora. Se ele estiver offline, os outros celulares assumem alguns segundos depois. A transação garante que só a primeira gravação vale.
+- **Timer igual em todos**: a sala guarda o início da rodada e as pausas das reuniões; cada celular calcula o tempo de rodada. Na entrada, o celular grava `clocks/{uid}` com o horário do servidor para corrigir a diferença do relógio dele.
+- **Avanço automático**: quando a votação ou o limite de 3 horas vence, o anfitrião grava a mudança na hora. Se ele estiver offline, os outros celulares assumem alguns segundos depois. A transação garante que só a primeira gravação vale.
 
 ## Segurança
 

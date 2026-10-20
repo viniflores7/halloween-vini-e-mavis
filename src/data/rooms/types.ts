@@ -2,22 +2,19 @@ export type RoomStatus = 'lobby' | 'playing' | 'meeting' | 'ended'
 export type Role = 'impostor' | 'crewmate'
 export type Team = 'crewmates' | 'impostors'
 export type MeetingKind = 'emergency' | 'report'
-export type EndReason = 'impostorsEliminated' | 'impostorsOutnumber' | 'timeUp'
+export type EndReason = 'impostorsEliminated' | 'impostorsOutnumber' | 'timeLimit'
 
 export const SKIP_VOTE = 'skip'
 
 export interface RoomSettings {
-  roundMinutes: number
   impostorCount: number
   emergencyMeetingsPerPlayer: number
   votingSeconds: number
-  timeUpWinner: Team
 }
 
 export interface Round {
   number: number
   startsAt: number
-  durationMs: number
   pausedAt: number | null
   pausedMs: number
   resumedAt: number | null
@@ -46,7 +43,7 @@ export interface MeetingOutcome {
 }
 
 export interface RoundResult {
-  winner: Team
+  winner: Team | null
   reason: EndReason
 }
 
@@ -119,7 +116,7 @@ export type GameRuleViolation =
   | 'notAlive'
   | 'invalidVictim'
   | 'noEmergencyLeft'
-  | 'timeUp'
+  | 'timeLimitReached'
   | 'notInMeeting'
   | 'alreadyVoted'
   | 'invalidVote'

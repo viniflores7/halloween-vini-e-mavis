@@ -6,6 +6,8 @@ import { Crewmate } from '@/shared/components/Crewmate'
 import { useAsyncAction } from '@/shared/hooks/useAsyncAction'
 import './roundEnd.css'
 
+const winnerTitles = { crewmates: copy.crewmatesWin, impostors: copy.impostorsWin }
+
 interface RoundEndProps {
   room: Room
   players: Player[]
@@ -17,17 +19,16 @@ export function RoundEnd({ room, players, myId }: RoundEndProps) {
   const action = useAsyncAction(describeError)
   const impostors = players.filter((player) => impostorIds(room).includes(player.id))
   const myTeam = roleOf(room, myId) === 'impostor' ? 'impostors' : 'crewmates'
-  const won = result.winner === myTeam
 
   const backToLobby = () => action.run(async () => (await getRoomRepository()).backToLobby(room.code))
 
   return (
-    <div className={`page page--center round-end round-end--${result.winner}`}>
+    <div className={`page page--center round-end round-end--${result.winner ?? 'none'}`}>
       <Crewmate color={result.winner === 'impostors' ? '#8e1b1b' : '#1d1915'} className="round-end__crewmate" />
-      <h1 className="display round-end__title">
-        {result.winner === 'impostors' ? copy.impostorsWin : copy.crewmatesWin}
-      </h1>
-      <p className="title round-end__personal">{won ? copy.youWon : copy.youLost}</p>
+      <h1 className="display round-end__title">{result.winner ? winnerTitles[result.winner] : copy.noWinner}</h1>
+      {result.winner && (
+        <p className="title round-end__personal">{result.winner === myTeam ? copy.youWon : copy.youLost}</p>
+      )}
       <p className="muted center">{copy.reasons[result.reason]}</p>
 
       <section className="card round-end__impostors">

@@ -17,7 +17,7 @@ import {
   ROLE_REVEAL_MS,
   startRound,
 } from './gameRules'
-import { remainingMs } from './roundTimer'
+import { elapsedPlayMs, formatClock, MAX_ROUND_MS } from './roundTimer'
 import { GameRuleError, SKIP_VOTE, type Room } from './types'
 
 const NOW = 1_000_000
@@ -73,11 +73,11 @@ describe('entrada na sala', () => {
 describe('configurações', () => {
   it('só o anfitrião muda e os valores ficam dentro dos limites', () => {
     const room = lobbyWith()
-    const settings = { ...room.settings, roundMinutes: 500, impostorCount: 0, votingSeconds: 10 }
+    const settings = { ...room.settings, impostorCount: 0, emergencyMeetingsPerPlayer: 9, votingSeconds: 10 }
     expect(violation(() => changeSettings(room, 'bia', settings))).toBe('notHost')
     expect(changeSettings(room, 'ana', settings).settings).toMatchObject({
-      roundMinutes: 60,
       impostorCount: 1,
+      emergencyMeetingsPerPlayer: 5,
       votingSeconds: 30,
     })
   })
@@ -95,10 +95,11 @@ describe('início da rodada', () => {
     expect(roles).toHaveLength(5)
   })
 
-  it('começa a contar depois da revelação dos papéis', () => {
+  it('começa a contar do zero depois da revelação dos papéis', () => {
     const { room, startsAt } = playingRoom()
     expect(room.round!.startsAt).toBe(startsAt)
-    expect(remainingMs(room.round!, NOW)).toBe(15 * 60_000)
+    expect(elapsedPlayMs(room.round!, NOW)).toBe(0)
+    expect(elapsedPlayMs(room.round!, startsAt + 90_000)).toBe(90_000)
   })
 })
 
@@ -108,7 +109,7 @@ describe('reuniões', () => {
     const meeting = callMeeting(room, crew[0], startsAt + 60_000, 'report', crew[1])
     expect(meeting.status).toBe('meeting')
     expect(meeting.round!.dead).toEqual([crew[1]])
-    expect(remainingMs(meeting.round!, startsAt + 600_000)).toBe(14 * 60_000)
+    expect(elapsedPlayMs(meeting.round!, startsAt + 600_000)).toBe(60_000)
   })
 
   it('não deixa denunciar a si mesmo e o morto continua morto depois da votação', () => {
@@ -160,8 +161,8 @@ describe('votação', () => {
     for (const voter of [...crew, impostor]) meeting = castVote(meeting, voter, calledAt + 1000, crew[3])
     expect(meeting.status).toBe('playing')
     expect(meeting.lastOutcome).toMatchObject({ ejectedId: crew[3], ejectedWasImpostor: false })
-    expect(remainingMs(meeting.round!, calledAt + 1000 + OUTCOME_MS - 1)).toBe(14 * 60_000)
-    expect(remainingMs(meeting.round!, calledAt + 1000 + OUTCOME_MS + 30_000)).toBe(14 * 60_000 - 30_000)
+    expect(elapsedPlayMs(meeting.round!, calledAt + 1000 + OUTCOME_MS - 1)).toBe(60_000)
+    expect(elapsedPlayMs(meeting.round!, calledAt + 1000 + OUTCOME_MS + 30_000)).toBe(90_000)
   })
 
   it('não aceita voto duplicado, de morto ou em morto', () => {
@@ -201,21 +202,32 @@ describe('pickEjected', () => {
   })
 })
 
-describe('fim do tempo', () => {
-  it('dá a vitória para o time escolhido nas configurações', () => {
-    const { room, startsAt } = playingRoom()
-    const end = startsAt + room.round!.durationMs
-    expect(advanceByClock(room, end - 1)).toBeNull()
-    expect(advanceByClock(room, end)!.result).toEqual({ winner: 'crewmates', reason: 'timeUp' })
-
-    const impostorsWin = { ...room, settings: { ...room.settings, timeUpWinner: 'impostors' as const } }
-    expect(advanceByClock(impostorsWin, end)!.result).toEqual({ winner: 'impostors', reason: 'timeUp' })
+describe('limite de 3 horas', () => {
+  it('encerra a rodada sem vencedor e para o relógio em 3h', () => {
+    const { room, crew, startsAt } = playingRoom()
+    const limit = startsAt + MAX_ROUND_MS
+    expect(advanceByClock(room, limit - 1)).toBeNull()
+    expect(advanceByClock(room, limit)!.result).toEqual({ winner: null, reason: 'timeLimit' })
+    expect(elapsedPlayMs(room.round!, limit + 60_000)).toBe(MAX_ROUND_MS)
+    expect(violation(() => callMeeting(room, crew[0], limit, 'emergency'))).toBe('timeLimitReached')
   })
 
   it('o anfitrião volta todos para o lobby mantendo os jogadores', () => {
     const { room, startsAt } = playingRoom()
-    const ended = advanceByClock(room, startsAt + room.round!.durationMs)!
+    const ended = advanceByClock(room, startsAt + MAX_ROUND_MS)!
     const lobby = backToLobby(ended, 'ana')
     expect(lobby).toMatchObject({ status: 'lobby', round: null, roundsPlayed: 1, playerIds: players })
+  })
+})
+
+describe('formatClock', () => {
+  it.each([
+    [0, '00:00'],
+    [59_999, '00:59'],
+    [65_000, '01:05'],
+    [3_600_000, '1:00:00'],
+    [MAX_ROUND_MS, '3:00:00'],
+  ])('mostra %i ms como %s', (ms, expected) => {
+    expect(formatClock(ms)).toBe(expected)
   })
 })
