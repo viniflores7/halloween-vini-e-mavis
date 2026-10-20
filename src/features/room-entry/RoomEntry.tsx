@@ -1,20 +1,27 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { describeError } from '@/content/errors'
-import { roomEntryContent as copy } from '@/content/roomEntry'
-import { getRoomRepository, normalizeRoomCode, rememberedRoomCode, ROOM_CODE_LENGTH } from '@/data/rooms'
-import { Crewmate } from '@/shared/components/Crewmate'
+import type { RoomEntryCopy } from '@/content/roomEntry'
+import { normalizeRoomCode, rememberedRoomCode, ROOM_CODE_LENGTH, type RoomKind } from '@/data/realtime'
 import { BackIcon } from '@/shared/components/Icons'
 import { useAsyncAction } from '@/shared/hooks/useAsyncAction'
 import './roomEntry.css'
 
-export function RoomEntryPage() {
+interface RoomEntryProps {
+  copy: RoomEntryCopy
+  kind: RoomKind
+  path: string
+  illustration: ReactNode
+  loadRepository: () => Promise<{ create(): Promise<string>; exists(code: string): Promise<boolean> }>
+}
+
+export function RoomEntry({ copy, kind, path, illustration, loadRepository }: RoomEntryProps) {
   const navigate = useNavigate()
   const [code, setCode] = useState('')
   const [notFound, setNotFound] = useState(false)
   const joining = useAsyncAction(describeError)
   const creating = useAsyncAction(describeError)
-  const lastRoom = rememberedRoomCode()
+  const lastRoom = rememberedRoomCode(kind)
 
   async function join(event: FormEvent) {
     event.preventDefault()
@@ -22,13 +29,13 @@ export function RoomEntryPage() {
     if (normalized.length !== ROOM_CODE_LENGTH) return
     setNotFound(false)
     await joining.run(async () => {
-      if (await (await getRoomRepository()).exists(normalized)) navigate(`/sala/${normalized}`)
+      if (await (await loadRepository()).exists(normalized)) navigate(`/${path}/${normalized}`)
       else setNotFound(true)
     })
   }
 
   function create() {
-    creating.run(async () => navigate(`/sala/${await (await getRoomRepository()).create()}`))
+    creating.run(async () => navigate(`/${path}/${await (await loadRepository()).create()}`))
   }
 
   return (
@@ -38,14 +45,14 @@ export function RoomEntryPage() {
       </Link>
 
       <header className="page-header room-entry__header">
-        <Crewmate className="room-entry__crewmate" />
+        {illustration}
         <p className="label">{copy.kicker}</p>
         <h1 className="display">{copy.title}</h1>
         <p className="muted">{copy.intro}</p>
       </header>
 
       {lastRoom && (
-        <Link to={`/sala/${lastRoom}`} className="button button--block">
+        <Link to={`/${path}/${lastRoom}`} className="button button--block">
           {copy.rejoin(lastRoom)}
         </Link>
       )}

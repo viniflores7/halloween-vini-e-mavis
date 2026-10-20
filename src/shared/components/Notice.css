@@ -1,0 +1,19 @@
+.notice {
+  align-items: center;
+  text-align: center;
+  gap: 0.8rem;
+}
+
+.notice__crewmate {
+  width: 96px;
+}
+
+.notice__crewmate.is-loading {
+  animation: bob 1.2s ease-in-out infinite;
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+}

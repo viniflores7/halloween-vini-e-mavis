@@ -1,5 +1,6 @@
 import { meetingContent as copy } from '@/content/meeting'
-import type { Meeting, Player } from '@/data/rooms'
+import type { Player } from '@/data/realtime'
+import type { Meeting } from '@/data/rooms'
 import { Avatar } from '@/shared/components/Avatar'
 import { EmergencyIcon, ReportIcon } from '@/shared/components/Icons'
 import { Overlay } from '@/shared/components/Overlay'

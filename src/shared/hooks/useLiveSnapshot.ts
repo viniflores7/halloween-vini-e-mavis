@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react'
-import { getRoomRepository, type RoomRepository, type RoomSnapshot } from '@/data/rooms'
 
-interface RoomConnection {
-  repository: RoomRepository | null
+interface LiveSource<S> {
+  playerId(): Promise<string>
+  watch(code: string, onChange: (snapshot: S) => void, onError: (error: unknown) => void): () => void
+}
+
+type SnapshotOf<R> = R extends LiveSource<infer S> ? S : never
+
+interface LiveConnection<R, S> {
+  repository: R | null
   myId: string | null
-  snapshot: RoomSnapshot | null
+  snapshot: S | null
   failed: boolean
 }
 
-export function useRoomSnapshot(code: string) {
-  const [connection, setConnection] = useState<RoomConnection>({
+export function useLiveSnapshot<R extends LiveSource<unknown>>(loadRepository: () => Promise<R>, code: string) {
+  const [connection, setConnection] = useState<LiveConnection<R, SnapshotOf<R>>>({
     repository: null,
     myId: null,
     snapshot: null,
@@ -21,14 +27,15 @@ export function useRoomSnapshot(code: string) {
     let cancelled = false
     const fail = () => !cancelled && setConnection((current) => ({ ...current, failed: true }))
 
-    getRoomRepository()
+    loadRepository()
       .then(async (repository) => {
         const myId = await repository.playerId()
         if (cancelled) return
         setConnection((current) => ({ ...current, repository, myId }))
         stop = repository.watch(
           code,
-          (snapshot) => setConnection((current) => ({ ...current, snapshot, failed: false })),
+          (snapshot) =>
+            setConnection((current) => ({ ...current, snapshot: snapshot as SnapshotOf<R>, failed: false })),
           fail,
         )
       })
@@ -38,7 +45,7 @@ export function useRoomSnapshot(code: string) {
       cancelled = true
       stop?.()
     }
-  }, [code])
+  }, [loadRepository, code])
 
   return connection
 }

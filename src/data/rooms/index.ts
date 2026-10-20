@@ -1,17 +1,13 @@
 import { lazyRepository } from '../lazyRepository'
 import { createRoomRepository } from './roomRepository'
-import type { RoomRepository } from './types'
+import type { Room, RoomRepository } from './types'
 
 export const getRoomRepository = lazyRepository<RoomRepository>(
-  () => import('./firestoreRoomStore').then((m) => createRoomRepository(m.createFirestoreRoomStore())),
-  () => import('./demoRoomStore').then((m) => createRoomRepository(m.createDemoRoomStore())),
+  () => import('../realtime/firestoreStore').then((m) => createRoomRepository(m.createFirestoreStore<Room>('rooms'))),
+  () => import('../realtime/demoStore').then((m) => createRoomRepository(m.createDemoStore<Room>('rooms'))),
 )
 
 export * from './gameRules'
-export * from './roomCode'
-export * from './players'
-export * from './rememberedRoom'
 export * from './roundTimer'
-export { MAX_NAME_LENGTH } from './roomRepository'
-export { GameRuleError, RoomNotFoundError, SKIP_VOTE } from './types'
+export { GameRuleError, SKIP_VOTE } from './types'
 export type * from './types'

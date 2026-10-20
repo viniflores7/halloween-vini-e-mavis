@@ -15,6 +15,6 @@ export function normalizeRoomCode(code: string) {
     .slice(0, ROOM_CODE_LENGTH)
 }
 
-export function roomLink(code: string, origin = window.location.origin) {
-  return `${origin}/sala/${code}`
+export function roomLink(path: string, code: string, origin = window.location.origin) {
+  return `${origin}/${path}/${code}`
 }

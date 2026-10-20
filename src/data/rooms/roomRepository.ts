@@ -10,38 +10,37 @@ import {
   removeFromRoom,
   startRound,
 } from './gameRules'
-import { generateRoomCode } from './roomCode'
-import type { PlayerProfile, Room, RoomRepository, RoomStore } from './types'
-
-export const MAX_NAME_LENGTH = 24
+import { newPlayer } from '@/data/realtime/players'
+import { generateRoomCode } from '@/data/realtime/roomCode'
+import type { LiveStore } from '@/data/realtime/types'
+import type { Room, RoomRepository } from './types'
 
 type Transition = (room: Room, playerId: string, now: number) => Room | null
 
-export function createRoomRepository(store: RoomStore, random: () => number = Math.random): RoomRepository {
+export function createRoomRepository(store: LiveStore<Room>, random: () => number = Math.random): RoomRepository {
   async function change(code: string, transition: Transition) {
     const playerId = await store.playerId()
-    await store.changeRoom(code, (room) => transition(room, playerId, store.now()))
+    await store.change(code, (room) => transition(room, playerId, store.now()))
   }
 
   return {
     playerId: () => store.playerId(),
     now: () => store.now(),
-    exists: (code) => store.roomExists(code),
+    exists: (code) => store.exists(code),
     watch: (code, onChange, onError) => store.watch(code, onChange, onError),
 
     async create() {
       const hostId = await store.playerId()
       for (;;) {
         const code = generateRoomCode()
-        if (await store.createRoom(newRoom(code, hostId, store.now()))) return code
+        if (await store.create(newRoom(code, hostId, store.now()))) return code
       }
     },
 
-    async join(code, profile: PlayerProfile) {
+    async join(code, profile) {
       const playerId = await store.playerId()
-      const name = profile.name.trim().slice(0, MAX_NAME_LENGTH)
-      await store.savePlayer(code, { id: playerId, name, photo: profile.photo, joinedAt: store.now() })
-      await store.changeRoom(code, (room) => joinRoom(room, playerId))
+      await store.savePlayer(code, newPlayer(playerId, profile, store.now()))
+      await store.change(code, (room) => joinRoom(room, playerId))
     },
 
     async leave(code) {

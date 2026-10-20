@@ -164,3 +164,33 @@
 .badge--blood {
   color: var(--blood);
 }
+
+.link-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: -0.4rem;
+}
+
+.dock {
+  position: sticky;
+  bottom: -22px;
+  margin: auto calc(-1 * clamp(8px, 3.5vw, 14px)) -22px;
+  padding: 0.8rem clamp(8px, 3.5vw, 14px) 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: linear-gradient(transparent, var(--paper) 22%);
+}
+
+.waiting {
+  margin: 0;
+  padding: 0.9rem;
+  text-align: center;
+  font-family: var(--font-title);
+  text-transform: uppercase;
+  border: 1.5px dashed var(--line);
+  border-radius: 999px;
+  background: var(--paper-light);
+  animation: pulse 2.4s ease-in-out infinite;
+}

@@ -1,13 +1,6 @@
 import { meetingContent as copy } from '@/content/meeting'
-import {
-  alivePlayerIds,
-  findPlayer,
-  impostorIds,
-  SKIP_VOTE,
-  type MeetingOutcome as Outcome,
-  type Player,
-  type Room,
-} from '@/data/rooms'
+import { findPlayer, type Player } from '@/data/realtime'
+import { alivePlayerIds, impostorIds, SKIP_VOTE, type MeetingOutcome as Outcome, type Room } from '@/data/rooms'
 import { Avatar } from '@/shared/components/Avatar'
 import { Crewmate } from '@/shared/components/Crewmate'
 import { Overlay } from '@/shared/components/Overlay'

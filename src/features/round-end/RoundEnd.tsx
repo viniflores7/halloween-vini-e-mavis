@@ -1,6 +1,7 @@
 import { describeError } from '@/content/errors'
 import { roundEndContent as copy } from '@/content/roundEnd'
-import { getRoomRepository, impostorIds, isHost, roleOf, type Player, type Room } from '@/data/rooms'
+import type { Player } from '@/data/realtime'
+import { getRoomRepository, impostorIds, isHost, roleOf, type Room } from '@/data/rooms'
 import { Avatar } from '@/shared/components/Avatar'
 import { Crewmate } from '@/shared/components/Crewmate'
 import { useAsyncAction } from '@/shared/hooks/useAsyncAction'

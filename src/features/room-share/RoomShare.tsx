@@ -1,19 +1,27 @@
 import { useEffect, useId, useState } from 'react'
-import { lobbyContent as copy } from '@/content/lobby'
-import { roomLink } from '@/data/rooms'
+import { roomShareContent as copy } from '@/content/roomShare'
+import { roomLink } from '@/data/realtime'
 import { QrIcon, ShareIcon } from '@/shared/components/Icons'
 import { Modal } from '@/shared/components/Modal'
 import { useCopyToClipboard } from '@/shared/hooks/useCopyToClipboard'
+import './roomShare.css'
 
-export function RoomShare({ code }: { code: string }) {
-  const link = roomLink(code)
+interface RoomShareProps {
+  code: string
+  path: string
+  shareTitle: string
+  shareText: string
+}
+
+export function RoomShare({ code, path, shareTitle, shareText }: RoomShareProps) {
+  const link = roomLink(path, code)
   const clipboard = useCopyToClipboard()
   const [qrOpen, setQrOpen] = useState(false)
 
   async function share() {
     if (navigator.share) {
       try {
-        return await navigator.share({ title: copy.shareTitle, text: copy.shareText(code), url: link })
+        return await navigator.share({ title: shareTitle, text: shareText, url: link })
       } catch (error) {
         if ((error as DOMException).name === 'AbortError') return
       }

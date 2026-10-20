@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { describeError } from '@/content/errors'
 import { roundContent as copy } from '@/content/round'
+import type { Player } from '@/data/realtime'
 import {
   alivePlayerIds,
   elapsedPlayMs,
@@ -10,7 +11,6 @@ import {
   isHost,
   roleOf,
   type MeetingKind,
-  type Player,
   type Room,
 } from '@/data/rooms'
 import { Avatar } from '@/shared/components/Avatar'

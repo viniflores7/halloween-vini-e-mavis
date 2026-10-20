@@ -1,0 +1,49 @@
+.room-share {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.room-share__code {
+  display: flex;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.room-share__code span {
+  display: grid;
+  place-items: center;
+  width: 3.1rem;
+  height: 3.6rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 10px;
+  background: var(--paper-light);
+  box-shadow:
+    inset 0 0 0 3px var(--paper-light),
+    inset 0 0 0 4px var(--line-soft);
+  font-family: var(--font-title);
+  font-size: 2.1rem;
+  line-height: 1;
+}
+
+.room-share__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.room-share__actions .button {
+  white-space: nowrap;
+  padding-inline: 0.9rem;
+}
+
+.qr__code {
+  width: min(70vw, 280px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.qr__code svg {
+  width: 100%;
+  height: 100%;
+}

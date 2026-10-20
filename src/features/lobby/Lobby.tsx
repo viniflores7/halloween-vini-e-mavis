@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { describeError } from '@/content/errors'
 import { lobbyContent as copy } from '@/content/lobby'
-import { getRoomRepository, isHost, MIN_PLAYERS, type Player, type Room } from '@/data/rooms'
+import type { Player } from '@/data/realtime'
+import { getRoomRepository, isHost, MAX_PLAYERS, MIN_PLAYERS, type Room } from '@/data/rooms'
+import { ParticipantGrid } from '@/features/participants'
+import { RoomShare } from '@/features/room-share'
 import { ConfirmDialog } from '@/shared/components/ConfirmDialog'
 import { BackIcon } from '@/shared/components/Icons'
 import { useAsyncAction } from '@/shared/hooks/useAsyncAction'
-import { CrewList } from './CrewList'
 import { LobbySettings } from './LobbySettings'
-import { RoomShare } from './RoomShare'
 import './lobby.css'
 
 interface LobbyProps {
@@ -38,11 +39,18 @@ export function Lobby({ room, players, myId, onEditProfile }: LobbyProps) {
       <Link to="/jogatina" className="back-link">
         <BackIcon /> {copy.back}
       </Link>
-      <RoomShare code={room.code} />
-      <CrewList room={room} players={players} myId={myId} canKick={host} />
+      <RoomShare code={room.code} path="sala" shareTitle={copy.shareTitle} shareText={copy.shareText(room.code)} />
+      <ParticipantGrid
+        title={copy.crew}
+        players={players}
+        max={MAX_PLAYERS}
+        hostId={room.hostId}
+        myId={myId}
+        onKick={host ? async (player) => (await getRoomRepository()).kick(room.code, player.id) : undefined}
+      />
       <LobbySettings room={room} editable={host} />
 
-      <div className="lobby__links">
+      <div className="link-row">
         <button type="button" className="link" onClick={onEditProfile}>
           {copy.editProfile}
         </button>
@@ -51,7 +59,7 @@ export function Lobby({ room, players, myId, onEditProfile }: LobbyProps) {
         </button>
       </div>
 
-      <div className="lobby__dock">
+      <div className="dock">
         {host ? (
           <>
             {starting.error && <p className="error center">{starting.error}</p>}
@@ -66,7 +74,7 @@ export function Lobby({ room, players, myId, onEditProfile }: LobbyProps) {
             </button>
           </>
         ) : (
-          <p className="lobby__waiting">{copy.waitingHost}</p>
+          <p className="waiting">{copy.waitingHost}</p>
         )}
       </div>
 

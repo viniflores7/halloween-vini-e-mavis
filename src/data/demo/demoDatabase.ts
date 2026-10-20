@@ -1,26 +1,31 @@
 import { readStorage, writeStorage } from '@/shared/lib/storage'
-import type { Player, Room } from '@/data/rooms/types'
+import type { Player } from '@/data/realtime/types'
 
 // Modo demonstração: sem Firebase, as salas ficam no localStorage e as abas do mesmo navegador jogam juntas
-const STORAGE_KEY = 'hvm-demo-db'
+const STORAGE_KEY = 'hvm-demo-db-v2'
 
-export interface DemoDatabase {
-  rooms: Record<string, Room>
+export interface DemoCollection {
+  docs: Record<string, unknown>
   players: Record<string, Record<string, Player>>
 }
+
+export type DemoDatabase = Record<string, DemoCollection>
 
 type Listener = () => void
 
 const listeners = new Set<Listener>()
 let memory: string | null = null
 
-export function readDemoDatabase(): DemoDatabase {
+export function readDemoCollection(name: string): DemoCollection {
   const stored = readStorage(STORAGE_KEY) ?? memory
-  return stored ? (JSON.parse(stored) as DemoDatabase) : { rooms: {}, players: {} }
+  const database = stored ? (JSON.parse(stored) as DemoDatabase) : {}
+  return database[name] ?? { docs: {}, players: {} }
 }
 
-export function writeDemoDatabase(database: DemoDatabase) {
-  memory = JSON.stringify(database)
+export function writeDemoCollection(name: string, collection: DemoCollection) {
+  const stored = readStorage(STORAGE_KEY) ?? memory
+  const database = stored ? (JSON.parse(stored) as DemoDatabase) : {}
+  memory = JSON.stringify({ ...database, [name]: collection })
   writeStorage(STORAGE_KEY, memory)
   listeners.forEach((listener) => listener())
 }

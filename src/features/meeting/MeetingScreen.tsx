@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { describeError } from '@/content/errors'
 import { meetingContent as copy } from '@/content/meeting'
+import { findPlayer, type Player } from '@/data/realtime'
 import {
   alivePlayerIds,
-  findPlayer,
   formatClock,
   getRoomRepository,
   isHost,
   MEETING_ALERT_MS,
   SKIP_VOTE,
-  type Player,
   type Room,
 } from '@/data/rooms'
 import { Avatar } from '@/shared/components/Avatar'
@@ -96,7 +95,7 @@ export function MeetingScreen({ room, players, myId, now }: MeetingScreenProps) 
         </section>
       )}
 
-      <div className="meeting__dock">
+      <div className="dock">
         {action.error && <p className="error center">{action.error}</p>}
         {canVote ? (
           <>

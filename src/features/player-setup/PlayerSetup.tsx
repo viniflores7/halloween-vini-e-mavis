@@ -1,18 +1,19 @@
 import { useState, type FormEvent } from 'react'
 import { describeError } from '@/content/errors'
 import { playerSetupContent as copy } from '@/content/playerSetup'
-import { MAX_NAME_LENGTH, type PlayerProfile } from '@/data/rooms'
+import { MAX_NAME_LENGTH, type PlayerProfile } from '@/data/realtime'
 import { useAsyncAction } from '@/shared/hooks/useAsyncAction'
 import { CameraCapture } from './CameraCapture'
 import './playerSetup.css'
 
 interface PlayerSetupProps {
   initial?: PlayerProfile
+  photoRequired?: boolean
   onSubmit: (profile: PlayerProfile) => Promise<unknown>
   onCancel?: () => void
 }
 
-export function PlayerSetup({ initial, onSubmit, onCancel }: PlayerSetupProps) {
+export function PlayerSetup({ initial, photoRequired = false, onSubmit, onCancel }: PlayerSetupProps) {
   const [name, setName] = useState(initial?.name ?? '')
   const [photo, setPhoto] = useState(initial?.photo ?? '')
   const [missing, setMissing] = useState<'name' | 'photo' | null>(null)
@@ -55,9 +56,11 @@ export function PlayerSetup({ initial, onSubmit, onCancel }: PlayerSetupProps) {
         {missing === 'photo' && (
           <p className="error center">
             {copy.needsPhoto}{' '}
-            <button type="button" className="link" onClick={() => setAllowWithoutPhoto(true)}>
-              {copy.joinWithoutPhoto}
-            </button>
+            {!photoRequired && (
+              <button type="button" className="link" onClick={() => setAllowWithoutPhoto(true)}>
+                {copy.joinWithoutPhoto}
+              </button>
+            )}
           </p>
         )}
       </div>

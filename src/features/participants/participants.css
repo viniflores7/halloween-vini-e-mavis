@@ -1,0 +1,76 @@
+.crew__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1.5px solid var(--line);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.9rem;
+}
+
+.crew__count {
+  color: var(--ink-soft);
+}
+
+.crew__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem 0.4rem;
+}
+
+.crew__member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+  min-width: 0;
+  animation: rise 0.4s var(--ease) both;
+}
+
+.crew__avatar {
+  position: relative;
+}
+
+.crew__avatar .avatar {
+  --size: 70px;
+}
+
+.crew__crown {
+  position: absolute;
+  top: -12px;
+  left: -6px;
+  width: 28px;
+  transform: rotate(-20deg);
+}
+
+.crew__kick {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  background: var(--paper-light);
+  color: var(--blood);
+}
+
+.crew__kick::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+.crew__name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  line-height: 1.2;
+}

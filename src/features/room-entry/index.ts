@@ -1,1 +1,1 @@
-export { RoomEntryPage } from './RoomEntryPage'
+export { AmongUsEntryPage } from './AmongUsEntryPage'

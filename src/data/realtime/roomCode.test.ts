@@ -15,6 +15,7 @@ describe('normalizeRoomCode', () => {
 
 describe('roomLink', () => {
   it('monta o link da sala', () => {
-    expect(roomLink('BRUX', 'https://site.com')).toBe('https://site.com/sala/BRUX')
+    expect(roomLink('sala', 'BRUX', 'https://site.com')).toBe('https://site.com/sala/BRUX')
+    expect(roomLink('concurso', 'BRUX', 'https://site.com')).toBe('https://site.com/concurso/BRUX')
   })
 })

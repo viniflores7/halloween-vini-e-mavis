@@ -1,35 +1,38 @@
 import { useState } from 'react'
 import { describeError } from '@/content/errors'
-import { lobbyContent as copy } from '@/content/lobby'
-import { getRoomRepository, MAX_PLAYERS, type Player, type Room } from '@/data/rooms'
+import { participantsContent as copy } from '@/content/participants'
+import type { Player } from '@/data/realtime'
 import { Avatar } from '@/shared/components/Avatar'
 import { ConfirmDialog } from '@/shared/components/ConfirmDialog'
 import { CloseIcon, CrownIcon } from '@/shared/components/Icons'
 import { useAsyncAction } from '@/shared/hooks/useAsyncAction'
+import './participants.css'
 
-interface CrewListProps {
-  room: Room
+interface ParticipantGridProps {
+  title: string
   players: Player[]
+  max: number
+  hostId: string
   myId: string
-  canKick: boolean
+  onKick?: (player: Player) => Promise<unknown>
 }
 
-export function CrewList({ room, players, myId, canKick }: CrewListProps) {
+export function ParticipantGrid({ title, players, max, hostId, myId, onKick }: ParticipantGridProps) {
   const [kicking, setKicking] = useState<Player | null>(null)
   const kick = useAsyncAction(describeError)
 
   async function confirmKick() {
-    if (!kicking) return
-    const removed = await kick.run(async () => (await getRoomRepository()).kick(room.code, kicking.id))
+    if (!kicking || !onKick) return
+    const removed = await kick.run(() => onKick(kicking))
     if (removed) setKicking(null)
   }
 
   return (
     <section className="crew">
       <h2 className="label crew__title">
-        {copy.crew}{' '}
+        {title}{' '}
         <span className="crew__count">
-          {players.length}/{MAX_PLAYERS}
+          {players.length}/{max}
         </span>
       </h2>
       <ul className="crew__grid">
@@ -37,8 +40,8 @@ export function CrewList({ room, players, myId, canKick }: CrewListProps) {
           <li key={player.id} className="crew__member">
             <span className="crew__avatar">
               <Avatar player={player} size="lg" />
-              {player.id === room.hostId && <CrownIcon className="crew__crown" aria-label={copy.host} />}
-              {canKick && player.id !== myId && (
+              {player.id === hostId && <CrownIcon className="crew__crown" aria-label={copy.host} />}
+              {onKick && player.id !== myId && (
                 <button
                   type="button"
                   className="crew__kick"

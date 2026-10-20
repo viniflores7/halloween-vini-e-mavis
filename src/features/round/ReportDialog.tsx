@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
 import { roundContent as copy } from '@/content/round'
-import type { Player } from '@/data/rooms'
+import type { Player } from '@/data/realtime'
 import { Avatar } from '@/shared/components/Avatar'
 import { Modal } from '@/shared/components/Modal'
 

@@ -1,3 +1,5 @@
+import type { LiveSnapshot, PlayerProfile } from '@/data/realtime/types'
+
 export type RoomStatus = 'lobby' | 'playing' | 'meeting' | 'ended'
 export type Role = 'impostor' | 'crewmate'
 export type Team = 'crewmates' | 'impostors'
@@ -61,40 +63,12 @@ export interface Room {
   createdAt: number
 }
 
-export interface PlayerProfile {
-  name: string
-  photo: string
-}
-
-export interface Player extends PlayerProfile {
-  id: string
-  joinedAt: number
-}
-
-export interface RoomSnapshot {
-  room: Room | null
-  players: Player[]
-}
-
-export type RoomChange = (room: Room) => Room | null
-
-export interface RoomStore {
-  playerId(): Promise<string>
-  now(): number
-  createRoom(room: Room): Promise<boolean>
-  changeRoom(code: string, change: RoomChange): Promise<void>
-  roomExists(code: string): Promise<boolean>
-  savePlayer(code: string, player: Player): Promise<void>
-  removePlayer(code: string, playerId: string): Promise<void>
-  watch(code: string, onChange: (snapshot: RoomSnapshot) => void, onError: (error: unknown) => void): () => void
-}
-
 export interface RoomRepository {
   playerId(): Promise<string>
   now(): number
   create(): Promise<string>
   exists(code: string): Promise<boolean>
-  watch(code: string, onChange: (snapshot: RoomSnapshot) => void, onError: (error: unknown) => void): () => void
+  watch(code: string, onChange: (snapshot: LiveSnapshot<Room>) => void, onError: (error: unknown) => void): () => void
   join(code: string, profile: PlayerProfile): Promise<void>
   leave(code: string): Promise<void>
   kick(code: string, playerId: string): Promise<void>
@@ -125,11 +99,5 @@ export type GameRuleViolation =
 export class GameRuleError extends Error {
   constructor(readonly violation: GameRuleViolation) {
     super(violation)
-  }
-}
-
-export class RoomNotFoundError extends Error {
-  constructor(code: string) {
-    super(`Sala ${code} não existe`)
   }
 }

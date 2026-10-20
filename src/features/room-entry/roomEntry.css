@@ -13,8 +13,9 @@
   margin: 0.4rem 0 0;
 }
 
-.room-entry__crewmate {
+.room-entry__illustration {
   width: 64px;
+  height: 72px;
   margin-bottom: 0.3rem;
 }
 

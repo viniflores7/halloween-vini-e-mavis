@@ -91,17 +91,6 @@
   color: var(--ink-soft);
 }
 
-.meeting__dock {
-  position: sticky;
-  bottom: -22px;
-  margin: auto calc(-1 * clamp(8px, 3.5vw, 14px)) -22px;
-  padding: 0.8rem clamp(8px, 3.5vw, 14px) 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: linear-gradient(transparent, var(--paper) 22%);
-}
-
 .meeting__status {
   margin: 0;
   padding: 0.9rem;

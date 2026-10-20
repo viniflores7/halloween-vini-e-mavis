@@ -10,16 +10,24 @@ import {
   runTransaction,
   serverTimestamp,
   setDoc,
+  type Firestore,
 } from 'firebase/firestore'
 import { firebaseApp } from '@/data/firebase'
-import { RoomNotFoundError, type Player, type Room, type RoomSnapshot, type RoomStore } from './types'
+import { DocNotFoundError, type LiveSnapshot, type LiveStore, type Player } from './types'
 
-export function createFirestoreRoomStore(): RoomStore {
+interface FirebaseSession {
+  db: Firestore
+  playerId(): Promise<string>
+  now(): number
+}
+
+let session: FirebaseSession | undefined
+
+function firebaseSession(): FirebaseSession {
+  if (session) return session
   const app = firebaseApp()
   const auth = getAuth(app)
   const db = initializeFirestore(app, { ignoreUndefinedProperties: true })
-  const roomRef = (code: string) => doc(db, 'rooms', code)
-  const playersRef = (code: string) => collection(db, 'rooms', code, 'players')
   let clockOffsetMs = 0
   let signedIn: Promise<string> | undefined
 
@@ -40,43 +48,53 @@ export function createFirestoreRoomStore(): RoomStore {
     return uid
   }
 
-  const playerId = () =>
-    (signedIn ??= signIn().catch((error) => {
-      signedIn = undefined
-      throw error
-    }))
+  session = {
+    db,
+    playerId: () =>
+      (signedIn ??= signIn().catch((error) => {
+        signedIn = undefined
+        throw error
+      })),
+    now: () => Date.now() + clockOffsetMs,
+  }
+  return session
+}
+
+export function createFirestoreStore<T extends { code: string }>(collectionName: string): LiveStore<T> {
+  const { db, playerId, now } = firebaseSession()
+  const docRef = (code: string) => doc(db, collectionName, code)
+  const playersRef = (code: string) => collection(db, collectionName, code, 'players')
 
   return {
     playerId,
+    now,
 
-    now: () => Date.now() + clockOffsetMs,
-
-    async createRoom(room) {
+    async create(created) {
       await playerId()
       return runTransaction(db, async (transaction) => {
-        if ((await transaction.get(roomRef(room.code))).exists()) return false
-        transaction.set(roomRef(room.code), room)
+        if ((await transaction.get(docRef(created.code))).exists()) return false
+        transaction.set(docRef(created.code), created)
         return true
       })
     },
 
-    async changeRoom(code, change) {
+    async change(code, change) {
       await playerId()
       await runTransaction(
         db,
         async (transaction) => {
-          const snapshot = await transaction.get(roomRef(code))
-          if (!snapshot.exists()) throw new RoomNotFoundError(code)
-          const next = change(snapshot.data() as Room)
-          if (next) transaction.set(roomRef(code), next)
+          const snapshot = await transaction.get(docRef(code))
+          if (!snapshot.exists()) throw new DocNotFoundError(code)
+          const next = change(snapshot.data() as T)
+          if (next) transaction.set(docRef(code), next)
         },
         { maxAttempts: 15 },
       )
     },
 
-    async roomExists(code) {
+    async exists(code) {
       await playerId()
-      return (await getDoc(roomRef(code))).exists()
+      return (await getDoc(docRef(code))).exists()
     },
 
     async savePlayer(code, { id, ...player }) {
@@ -90,19 +108,19 @@ export function createFirestoreRoomStore(): RoomStore {
     },
 
     watch(code, onChange, onError) {
-      const snapshot: Partial<RoomSnapshot> = {}
+      const snapshot: Partial<LiveSnapshot<T>> = {}
       const unsubscribers: (() => void)[] = []
       let stopped = false
-      const emit = () => snapshot.room !== undefined && snapshot.players && onChange(snapshot as RoomSnapshot)
+      const emit = () => snapshot.doc !== undefined && snapshot.players && onChange(snapshot as LiveSnapshot<T>)
 
       playerId()
         .then(() => {
           if (stopped) return
           unsubscribers.push(
             onSnapshot(
-              roomRef(code),
-              (room) => {
-                snapshot.room = room.exists() ? (room.data() as Room) : null
+              docRef(code),
+              (live) => {
+                snapshot.doc = live.exists() ? (live.data() as T) : null
                 emit()
               },
               onError,
