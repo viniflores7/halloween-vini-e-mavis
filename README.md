@@ -1,0 +1,87 @@
+# 1ª Edição Halloween · Vini e Mavis
+
+Site da festa, feito para o celular: **concurso de melhor fantasia** (em breve) e **jogatina de Among Us** presencial, com salas em tempo real.
+
+React + Vite, hospedado de graça na **Vercel**, com as salas no **Firebase Firestore** e login anônimo do **Firebase Authentication** (plano gratuito Spark).
+
+## Como funciona a jogatina
+
+1. Alguém toca em **Jogatina Among Us → Criar nova sala** e vira o anfitrião.
+2. Os outros entram pelo código de 4 letras, pelo link (**Convidar**) ou pelo **QR code**. Até **15 jogadores** por sala.
+3. Cada um coloca o nome e tira uma foto com a fantasia (câmera frontal ou traseira; dá para escolher uma foto da galeria).
+4. O anfitrião ajusta as regras da rodada e toca em **Iniciar rodada**:
+   - duração (3 a 60 min);
+   - quantidade de impostores (1 a 3; o app limita conforme o número de jogadores);
+   - reuniões de emergência por pessoa;
+   - tempo de votação;
+   - quem vence se o tempo acabar.
+5. Cada celular mostra em segredo se a pessoa é **impostor** ou **tripulante** (impostores veem os comparsas). Depois disso aparece o timer, igual em todos os celulares.
+6. Tarefas e mortes são **presenciais**. No app, qualquer vivo pode:
+   - **Convocar reunião de emergência**;
+   - **Denunciar morte**, escolhendo quem foi encontrado morto.
+7. Na reunião o timer pausa, todo mundo recebe o alerta (com vibração) e os vivos votam em quem expulsar ou pulam o voto. O mais votado é ejetado (empate ou “pular” não ejeta ninguém).
+8. A rodada acaba quando todos os impostores saem, quando os impostores ficam em maioria ou quando o tempo acaba. O anfitrião volta todos para o lobby para a próxima.
+
+Durante a rodada a tela fica acesa (Wake Lock) e o botão **Segure para ver seu papel** mostra o papel só enquanto o dedo está na tela.
+
+## Rodando localmente
+
+Precisa do Node 20+ (a versão usada está em `.nvmrc`).
+
+```bash
+npm install
+npm run dev        # abre em http://localhost:5173
+```
+
+| Script            | O que faz                                          |
+| ----------------- | -------------------------------------------------- |
+| `npm run dev`     | Servidor de desenvolvimento                        |
+| `npm run build`   | Checa tipos e gera a versão de produção em `dist/` |
+| `npm run preview` | Serve o `dist/` localmente                         |
+| `npm test`        | Testes unitários (Vitest)                          |
+| `npm run lint`    | ESLint                                             |
+| `npm run format`  | Formata tudo com Prettier                          |
+
+Sem configurar o Firebase, o site roda em **modo demonstração**: as salas ficam no `localStorage` e cada aba do navegador é um jogador diferente. Abra 3 abas para testar uma partida inteira.
+
+A câmera só funciona em `https` ou em `localhost`. Para testar no celular, use o link da Vercel.
+
+## Configurar o Firebase (gratuito)
+
+1. Entre em <https://console.firebase.google.com> → **Adicionar projeto** (pode desativar o Google Analytics).
+2. **Criação → Firestore Database → Criar banco de dados** → modo de produção → região `southamerica-east1` (São Paulo).
+3. Na aba **Regras** do Firestore, cole o conteúdo de `firestore.rules` e publique.
+4. **Criação → Authentication → Vamos começar → Método de login → Anônimo** → ativar.
+5. **Configurações do projeto → Seus apps → Web (`</>`)** → registre o app e copie `apiKey`, `authDomain`, `projectId` e `appId`.
+6. Copie `.env.example` para `.env.local` e preencha.
+
+As fotos ficam comprimidas (320×320) dentro do próprio Firestore, então não precisa do Storage, que exige o plano pago.
+
+O plano Spark dá 50 mil leituras e 20 mil gravações por dia. Cada ação na sala (entrar, votar, convocar reunião) é uma gravação lida por todos os celulares da sala: uma noite inteira de jogatina com 15 pessoas fica bem abaixo do limite.
+
+## Publicar na Vercel (gratuito)
+
+1. Em <https://vercel.com/new>, importe o repositório (a Vercel detecta Vite sozinha).
+2. Em **Environment Variables**, adicione as mesmas variáveis do `.env.local`. Em `VITE_SITE_URL`, coloque o endereço final (ex.: `https://halloween-vini-e-mavis.vercel.app`), usado na prévia do link no WhatsApp.
+3. **Deploy**. A cada `git push` na `main`, a Vercel publica de novo.
+
+## Arquitetura
+
+Organizado por **features**: tudo de uma tela (componentes, regras de exibição e CSS) mora junto. Detalhes e regras de dependência em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
+
+```
+src/
+├── app/        # inicialização, rotas e moldura do convite
+├── features/   # uma pasta por tela
+├── content/    # todos os textos do site
+├── data/       # Firebase, regras do jogo e repositório das salas
+├── shared/     # componentes, hooks e utilitários reaproveitados
+└── styles/     # tokens de cor/fonte, base e componentes de UI globais
+```
+
+## Commits
+
+Seguimos [Conventional Commits](https://www.conventionalcommits.org/pt-br/), só com o título e em inglês: `tipo(escopo): descrição`.
+Tipos usados: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `chore`, `ci`. Ex.: `feat(meeting): add voting timer`.
+
+O GitHub Actions roda tipos, lint, formatação, testes e build a cada push na `main` e em pull requests.
