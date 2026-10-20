@@ -1,0 +1,65 @@
+.avatar {
+  --size: 56px;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  box-shadow:
+    0 0 0 2px var(--paper-light),
+    0 0 0 3px var(--line-soft);
+  background: var(--paper-deep);
+  overflow: hidden;
+}
+
+.avatar--sm {
+  --size: 40px;
+}
+
+.avatar--lg {
+  --size: 84px;
+}
+
+.avatar--xl {
+  --size: 140px;
+  border-width: 3px;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar__crewmate {
+  width: 70%;
+  height: 70%;
+  margin-top: 12%;
+}
+
+.avatar--dead img,
+.avatar--dead .avatar__crewmate {
+  filter: grayscale(1) sepia(0.4) brightness(0.8);
+  opacity: 0.7;
+}
+
+.avatar--dead::before,
+.avatar--dead::after {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 3px;
+  background: var(--blood);
+  border-radius: 2px;
+}
+
+.avatar--dead::before {
+  transform: rotate(45deg);
+}
+
+.avatar--dead::after {
+  transform: rotate(-45deg);
+}

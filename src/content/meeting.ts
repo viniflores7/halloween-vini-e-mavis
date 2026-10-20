@@ -1,0 +1,30 @@
+export const meetingContent = {
+  emergencyAlert: 'Reunião de emergência!',
+  reportAlert: 'Corpo encontrado!',
+  calledBy: (name: string) => `${name} convocou a reunião`,
+  reportedBy: (reporter: string, victim: string) => `${reporter} encontrou o corpo de ${victim}`,
+  title: 'Quem é o impostor?',
+  votingEndsIn: (time: string) => `A votação termina em ${time}`,
+  voted: 'votou',
+  you: 'você',
+  skip: 'Pular voto',
+  confirm: (name: string) => `Votar em ${name}`,
+  pick: 'Toque em quem você quer expulsar',
+  sending: 'Enviando…',
+  votedWaiting: (missing: number) =>
+    missing === 0
+      ? 'Apurando os votos…'
+      : `Voto registrado! Falta${missing > 1 ? 'm' : ''} ${missing} voto${missing > 1 ? 's' : ''}.`,
+  skipped: 'Você pulou o voto.',
+  ghostText: 'Fantasmas não votam. Assista em silêncio.',
+  dead: 'Mortos',
+  closeVoting: 'Encerrar votação agora',
+  ejected: (name: string) => `Ejetaram ${name} da nave.`,
+  wasImpostor: (name: string) => `${name} era impostor.`,
+  wasNotImpostor: (name: string) => `${name} não era impostor.`,
+  noEjectionTie: 'Ninguém foi ejetado. (Empate)',
+  noEjectionSkip: 'Ninguém foi ejetado. (Votação pulada)',
+  impostorsLeft: (count: number) => (count === 1 ? 'Resta 1 impostor.' : `Restam ${count} impostores.`),
+  votes: (count: number) => (count === 1 ? '1 voto' : `${count} votos`),
+  skipVotes: 'Pularam',
+}

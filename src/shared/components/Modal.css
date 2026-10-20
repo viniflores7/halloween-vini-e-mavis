@@ -1,0 +1,38 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  align-items: end;
+  padding: 12px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  background: rgba(20, 14, 9, 0.55);
+  animation: fade 0.25s both;
+}
+
+.modal__panel {
+  position: relative;
+  width: min(100%, 460px);
+  max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  margin: 0 auto;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--paper-light);
+  border: 1.5px solid var(--ink);
+  outline: 1px solid var(--line-soft);
+  outline-offset: -6px;
+  border-radius: 20px;
+  padding: 1.4rem 1.2rem 1.2rem;
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+  animation: rise 0.35s var(--ease) both;
+}
+
+.modal__panel:focus {
+  outline: 1px solid var(--line-soft);
+}
+
+@media (min-width: 600px) {
+  .modal {
+    align-items: center;
+  }
+}

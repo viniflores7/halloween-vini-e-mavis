@@ -1,0 +1,27 @@
+.room-entry__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.room-entry__header .display {
+  font-size: clamp(2.6rem, 14vw, 4rem);
+}
+
+.room-entry__header .muted {
+  margin: 0.4rem 0 0;
+}
+
+.room-entry__crewmate {
+  width: 64px;
+  margin-bottom: 0.3rem;
+}
+
+.room-entry__how {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}

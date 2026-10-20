@@ -1,0 +1,29 @@
+.game-notice {
+  align-items: center;
+  text-align: center;
+  gap: 0.8rem;
+}
+
+.game-notice__crewmate {
+  width: 96px;
+}
+
+.game-notice__crewmate.is-loading {
+  animation: bob 1.2s ease-in-out infinite;
+}
+
+.game__offline {
+  margin: 0 0 0.8rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 12px;
+  background: var(--blood);
+  color: var(--paper-light);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+}

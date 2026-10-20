@@ -1,0 +1,44 @@
+.round-end {
+  align-items: center;
+  text-align: center;
+  gap: 0.9rem;
+}
+
+.round-end__crewmate {
+  width: 110px;
+  animation: rise 0.8s var(--ease) both;
+}
+
+.round-end__title {
+  font-size: clamp(2.2rem, 11vw, 3.6rem);
+}
+
+.round-end--impostors .round-end__title {
+  color: var(--blood);
+}
+
+.round-end__personal {
+  font-size: clamp(1.3rem, 6vw, 1.8rem);
+}
+
+.round-end__impostors {
+  width: 100%;
+}
+
+.round-end__impostors ul {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.round-end__impostors li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+}
