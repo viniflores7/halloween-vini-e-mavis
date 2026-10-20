@@ -1,0 +1,36 @@
+:root {
+  --paper: #e6dbc1;
+  --paper-light: #f2ead8;
+  --paper-deep: #d6c6a2;
+  --ink: #2e2318;
+  --ink-soft: #6b5a46;
+  --blood: #7d1a1a;
+  --blood-deep: #561010;
+  --blood-soft: rgba(125, 26, 26, 0.1);
+  --line: rgba(46, 35, 24, 0.85);
+  --line-soft: rgba(46, 35, 24, 0.2);
+  --visor: #b8c7d1;
+  --font-title: 'Macondo', Georgia, serif;
+  --font-text: 'Alegreya', Georgia, serif;
+  --radius: 14px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Espessura da moldura ornamental: os números são as fatias da imagem moldura.webp */
+  --frame-scale: 0.3;
+  --frame-top: calc(111px * var(--frame-scale));
+  --frame-right: calc(149px * var(--frame-scale));
+  --frame-bottom: calc(160px * var(--frame-scale));
+  --frame-left: calc(147px * var(--frame-scale));
+}
+
+@media (max-width: 359px) {
+  :root {
+    --frame-scale: 0.24;
+  }
+}
+
+@media (min-width: 600px) {
+  :root {
+    --frame-scale: 0.4;
+  }
+}

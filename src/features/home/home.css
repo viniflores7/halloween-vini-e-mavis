@@ -1,0 +1,73 @@
+.home {
+  gap: clamp(1.4rem, 5dvh, 2.6rem);
+}
+
+.home__invite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.home__summons {
+  max-width: 14em;
+  font-size: clamp(0.95rem, 4.4vw, 1.2rem);
+  line-height: 1.25;
+}
+
+.home__edition {
+  margin-top: clamp(0.6rem, 2dvh, 1.2rem);
+  font-size: clamp(1.6rem, 8vw, 2.3rem);
+}
+
+.home__name {
+  font-size: clamp(2.4rem, 13vw, 4.6rem);
+}
+
+.home__hosts {
+  font-size: clamp(1.8rem, 9.5vw, 2.8rem);
+}
+
+.home__month {
+  margin-top: clamp(0.8rem, 3dvh, 1.6rem);
+  font-size: clamp(1rem, 4.6vw, 1.25rem);
+}
+
+.home__date {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  margin-top: 0.3rem;
+}
+
+.home__date-item {
+  padding: 0.45rem 0;
+  border-top: 1.5px solid var(--line);
+  border-bottom: 1.5px solid var(--line);
+  font-size: clamp(0.9rem, 4.3vw, 1.2rem);
+  white-space: nowrap;
+}
+
+.home__crewmate {
+  width: clamp(58px, 18vw, 84px);
+  animation: float 3.5s ease-in-out infinite;
+}
+
+.home__dress {
+  margin-top: clamp(0.6rem, 2dvh, 1.2rem);
+  font-size: clamp(0.95rem, 4.6vw, 1.25rem);
+}
+
+.home__options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-5px) rotate(-3deg);
+  }
+}
