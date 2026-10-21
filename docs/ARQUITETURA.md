@@ -19,6 +19,8 @@ src/
 │   ├── main.tsx             # Ponto de entrada (carrega estilos globais primeiro)
 │   ├── App.tsx              # Roteador
 │   ├── AppRoutes.tsx        # Tabela de rotas
+│   ├── VercelInsights.tsx   # Analytics e Speed Insights da Vercel (só no build de produção)
+│   ├── routePattern.ts      # Agrupa /sala/:código e /concurso/:código nos relatórios
 │   └── layout/              # Moldura ornamental e área com rolagem
 │
 ├── features/                # Uma pasta por tela
