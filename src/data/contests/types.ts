@@ -59,6 +59,7 @@ export type ContestRuleViolation =
   | 'contestStarted'
   | 'contestFull'
   | 'notEnoughParticipants'
+  | 'notEnoughForGroups'
   | 'notVoting'
   | 'notParticipant'
   | 'alreadyVoted'

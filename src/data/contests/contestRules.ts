@@ -2,10 +2,15 @@ import { podiumSize, rankCostumes, rankGroups } from './ranking'
 import { ContestRuleError, type Contest } from './types'
 
 export const MAX_PARTICIPANTS = 40
-export const MIN_PARTICIPANTS = 4
+export const MIN_PARTICIPANTS = 2
 export const BALLOT_SIZE = 3
 export const MIN_GROUP_SIZE = 2
 export const MAX_GROUP_SIZE = 3
+
+// Ninguém vota em si mesmo: com 2 pessoas só dá para escolher o 1º lugar, com 3 o 1º e o 2º
+export const ballotSize = (participantCount: number) => Math.min(BALLOT_SIZE, Math.max(0, participantCount - 1))
+
+export const canStartGroupContest = (contest: Contest) => contest.participants.length >= MIN_GROUP_SIZE * 2
 
 export function newContest(code: string, hostId: string, now: number): Contest {
   return {
@@ -80,9 +85,10 @@ export function castBallot(contest: Contest, actorId: string, now: number, picks
   if (contest.stage !== 'voting') throw new ContestRuleError('notVoting')
   if (!contest.participants.includes(actorId)) throw new ContestRuleError('notParticipant')
   if (actorId in contest.ballots) throw new ContestRuleError('alreadyVoted')
+  const size = ballotSize(contest.participants.length)
   const valid =
-    picks.length === BALLOT_SIZE &&
-    new Set(picks).size === BALLOT_SIZE &&
+    picks.length === size &&
+    new Set(picks).size === size &&
     picks.every((id) => id !== actorId && contest.participants.includes(id))
   if (!valid) throw new ContestRuleError('invalidBallot')
 
@@ -110,6 +116,7 @@ export function nextReveal(contest: Contest, actorId: string, now: number): Cont
 export function startGroupContest(contest: Contest, actorId: string, now: number): Contest {
   assertHost(contest, actorId)
   if (contest.stage !== 'results') throw new ContestRuleError('notInResults')
+  if (!canStartGroupContest(contest)) throw new ContestRuleError('notEnoughForGroups')
   return { ...contest, stage: 'duoSetup', stageAt: now, groups: [], groupBallots: {} }
 }
 

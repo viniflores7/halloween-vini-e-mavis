@@ -26,10 +26,10 @@ Durante a rodada a tela fica acesa (Wake Lock) e o botão **Segure para ver seu 
 
 1. Alguém toca em **Concurso melhor fantasia → Criar sala de votação** e vira o anfitrião.
 2. Os outros entram pelo código, pelo link ou pelo QR code (até **40 participantes**). Nome e **foto da fantasia são obrigatórios**.
-3. Só o anfitrião vê o botão **Começar votação** (precisa de pelo menos 4 pessoas). Todo mundo vê a animação com os participantes.
-4. Cada um escolhe o **1º, 2º e 3º lugar**, sem aparecer a própria foto. Vale 3, 2 e 1 ponto. Não tem tempo: quem já votou vê quem ainda falta, e o anfitrião pode **apurar agora** se alguém sumiu.
+3. Só o anfitrião vê o botão **Começar votação** (a partir de 2 pessoas). Todo mundo vê a animação com os participantes.
+4. Cada um escolhe o **1º, 2º e 3º lugar**, sem aparecer a própria foto (com 3 pessoas vota-se no 1º e 2º, com 2 pessoas só no 1º). Vale 3, 2 e 1 ponto. Não tem tempo: quem já votou vê quem ainda falta, e o anfitrião pode **apurar agora** se alguém sumiu.
 5. Quando todos votam, aparece a apuração e o **3º lugar** com suspense. O anfitrião avança para o **2º**, depois para o **1º** e por fim **revela os resultados**: pódio e quem votou em quem.
-6. No resultado, o anfitrião tem o botão **Fantasia em dupla**: todos veem a surpresa, o anfitrião monta as duplas e trios (pode entrar em um), os grupos são revelados e cada um vota no melhor grupo (menos o próprio). Depois vem o campeão e quem votou em quem.
+6. No resultado, com pelo menos 4 participantes, o anfitrião tem o botão **Fantasia em dupla**: todos veem a surpresa, o anfitrião monta as duplas e trios (pode entrar em um), os grupos são revelados e cada um vota no melhor grupo (menos o próprio). Depois vem o campeão e quem votou em quem.
 
 Empates: no individual, vence quem tem mais votos de 1º lugar e depois de 2º; se continuar empatado, os dois dividem o lugar. Nas duplas e trios, empate em votos divide o 1º lugar.
 

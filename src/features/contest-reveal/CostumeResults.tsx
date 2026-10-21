@@ -1,6 +1,12 @@
 import { contestRevealContent as copy } from '@/content/contestReveal'
 import { describeError } from '@/content/errors'
-import { costumeRanking, getContestRepository, isContestHost, type Contest } from '@/data/contests'
+import {
+  canStartGroupContest,
+  costumeRanking,
+  getContestRepository,
+  isContestHost,
+  type Contest,
+} from '@/data/contests'
 import { findPlayer, type Player } from '@/data/realtime'
 import { TrophyIcon } from '@/shared/components/Icons'
 import { useAsyncAction } from '@/shared/hooks/useAsyncAction'
@@ -37,7 +43,7 @@ export function CostumeResults({ contest, players, myId }: CostumeResultsProps) 
       </header>
       <Podium scores={costumeRanking(contest)} players={players} />
       <VoteBreakdown title={copy.whoVotedWhom} rows={rows} emptyLabel={copy.didNotVote} />
-      {isContestHost(contest, myId) && (
+      {isContestHost(contest, myId) && canStartGroupContest(contest) && (
         <div className="dock">
           {action.error && <p className="error center">{action.error}</p>}
           <button

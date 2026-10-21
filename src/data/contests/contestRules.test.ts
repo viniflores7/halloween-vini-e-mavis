@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
+  ballotSize,
+  canStartGroupContest,
   castBallot,
   castGroupBallot,
   closeGroupVoting,
@@ -55,9 +57,9 @@ describe('entrada', () => {
 })
 
 describe('início', () => {
-  it('só o anfitrião começa e precisa de pelo menos 4 pessoas', () => {
+  it('só o anfitrião começa e precisa de pelo menos 2 pessoas', () => {
     expect(violation(() => startVoting(lobbyWith(), 'bia', NOW))).toBe('notHost')
-    expect(violation(() => startVoting(lobbyWith(['ana', 'bia', 'caio']), 'ana', NOW))).toBe('notEnoughParticipants')
+    expect(violation(() => startVoting(lobbyWith(['ana']), 'ana', NOW))).toBe('notEnoughParticipants')
     expect(votingWith()).toMatchObject({ stage: 'voting', participants: people })
   })
 })
@@ -108,6 +110,38 @@ describe('votação individual', () => {
     expect([podium.revealPlace, second.revealPlace, first.revealPlace]).toEqual([3, 2, 1])
     expect(nextReveal(first, 'ana', NOW + 3).stage).toBe('results')
     expect(violation(() => nextReveal(podium, 'bia', NOW))).toBe('notHost')
+  })
+})
+
+describe('salas pequenas', () => {
+  it('com 2 pessoas cada uma vota só no 1º lugar e as duas empatam', () => {
+    const contest = votingWith(['ana', 'bia'])
+    expect(ballotSize(2)).toBe(1)
+    expect(violation(() => castBallot(contest, 'ana', NOW, ['bia', 'ana']))).toBe('invalidBallot')
+    const podium = voteAll(contest, { ana: ['bia'], bia: ['ana'] })
+    expect(podium).toMatchObject({ stage: 'podium', revealPlace: 1 })
+    expect(costumeRanking(podium).map((score) => score.place)).toEqual([1, 1])
+    expect(nextReveal(podium, 'ana', NOW).stage).toBe('results')
+  })
+
+  it('com 3 pessoas vota no 1º e no 2º lugar', () => {
+    const contest = voteAll(votingWith(['ana', 'bia', 'caio']), {
+      ana: ['bia', 'caio'],
+      bia: ['caio', 'ana'],
+      caio: ['bia', 'ana'],
+    })
+    expect(ballotSize(3)).toBe(2)
+    expect(costumeRanking(contest).map(({ playerId, points }) => [playerId, points])).toEqual([
+      ['bia', 6],
+      ['caio', 5],
+      ['ana', 4],
+    ])
+  })
+
+  it('a fantasia em dupla só aparece com pelo menos 4 pessoas', () => {
+    const results = nextReveal(voteAll(votingWith(['ana', 'bia']), { ana: ['bia'], bia: ['ana'] }), 'ana', NOW)
+    expect(canStartGroupContest(results)).toBe(false)
+    expect(violation(() => startGroupContest(results, 'ana', NOW))).toBe('notEnoughForGroups')
   })
 })
 

@@ -3,7 +3,11 @@ export const costumeVotingContent = {
   paradeTitle: 'Os participantes',
   paradeOutro: 'Hora de votar!',
   title: 'Seu voto',
-  instructions: 'Toque nas fantasias na ordem: 1º, 2º e 3º lugar. Toque de novo para desmarcar.',
+  instructionsBySize: [
+    'Toque na fantasia que merece o 1º lugar. Toque de novo para desmarcar.',
+    'Toque nas fantasias na ordem: 1º e 2º lugar. Toque de novo para desmarcar.',
+    'Toque nas fantasias na ordem: 1º, 2º e 3º lugar. Toque de novo para desmarcar.',
+  ],
   places: ['1º lugar', '2º lugar', '3º lugar'],
   placeShort: ['1º', '2º', '3º'],
   emptySlot: 'escolha',
