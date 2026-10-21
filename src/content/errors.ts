@@ -2,7 +2,7 @@ const violationMessages: Record<string, string> = {
   gameInProgress: 'A rodada já começou.',
   roomFull: 'A sala está cheia (15 jogadores).',
   notHost: 'Só o anfitrião pode fazer isso.',
-  notEnoughPlayers: 'Precisa de pelo menos 3 jogadores.',
+  notEnoughPlayers: 'Precisa de pelo menos 2 jogadores.',
   notPlaying: 'Espera a rodada voltar para fazer isso.',
   notAlive: 'Fantasmas não podem fazer isso.',
   invalidVictim: 'Essa pessoa não pode ser denunciada.',

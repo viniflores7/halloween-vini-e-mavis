@@ -84,8 +84,20 @@ describe('configurações', () => {
 })
 
 describe('início da rodada', () => {
-  it('exige pelo menos 3 jogadores', () => {
-    expect(violation(() => startRound(lobbyWith(['ana', 'bia']), 'ana', NOW))).toBe('notEnoughPlayers')
+  it('exige pelo menos 2 jogadores', () => {
+    expect(violation(() => startRound(lobbyWith(['ana']), 'ana', NOW))).toBe('notEnoughPlayers')
+  })
+
+  it('com 2 jogadores sorteia 1 impostor e termina na primeira denúncia', () => {
+    const { room, impostor, crew, startsAt } = playingRoom(['ana', 'bia'])
+    expect(callMeeting(room, impostor, startsAt, 'report', crew[0]).result).toEqual({
+      winner: 'impostors',
+      reason: 'impostorsOutnumber',
+    })
+    expect(callMeeting(room, crew[0], startsAt, 'report', impostor).result).toEqual({
+      winner: 'crewmates',
+      reason: 'impostorsEliminated',
+    })
   })
 
   it('sorteia a quantidade de impostores permitida para o número de jogadores', () => {

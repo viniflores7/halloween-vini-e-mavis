@@ -9,7 +9,7 @@ React + Vite, hospedado de graça na **Vercel**, com as salas no **Firebase Fire
 1. Alguém toca em **Jogatina Among Us → Criar nova sala** e vira o anfitrião.
 2. Os outros entram pelo código de 4 letras, pelo link (**Convidar**) ou pelo **QR code**. Até **15 jogadores** por sala.
 3. Cada um coloca o nome e tira uma foto com a fantasia (câmera frontal ou traseira; dá para escolher uma foto da galeria).
-4. O anfitrião ajusta as regras da rodada e toca em **Iniciar rodada**:
+4. O anfitrião ajusta as regras da rodada e toca em **Iniciar rodada** (a partir de 2 jogadores):
    - quantidade de impostores (1 a 3; o app limita conforme o número de jogadores);
    - reuniões de emergência por pessoa;
    - tempo de votação.

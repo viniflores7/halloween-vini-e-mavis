@@ -11,7 +11,7 @@ import {
 } from './types'
 
 export const MAX_PLAYERS = 15
-export const MIN_PLAYERS = 3
+export const MIN_PLAYERS = 2
 export const ROLE_REVEAL_MS = 7_000
 export const MEETING_ALERT_MS = 4_000
 export const OUTCOME_MS = 9_000
