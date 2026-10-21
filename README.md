@@ -71,8 +71,19 @@ O plano Spark dá 50 mil leituras e 20 mil gravações por dia. Cada ação na s
 ## Publicar na Vercel (gratuito)
 
 1. Em <https://vercel.com/new>, importe o repositório (a Vercel detecta Vite sozinha).
-2. Em **Environment Variables**, adicione as mesmas variáveis do `.env.local`. Em `VITE_SITE_URL`, coloque o endereço final (ex.: `https://halloween-vini-e-mavis.vercel.app`), usado na prévia do link no WhatsApp.
+2. Em **Environment Variables**, adicione as mesmas variáveis do `.env.local`, marcando **Production** e **Preview** (sem o Preview, os deploys de teste rodam em modo demonstração). Em `VITE_SITE_URL`, coloque o endereço final (ex.: `https://halloween-vini-e-mavis.vercel.app`), usado na prévia do link no WhatsApp.
 3. **Deploy**. A cada `git push` na `main`, a Vercel publica de novo.
+4. Em **Analytics** e em **Speed Insights**, no painel do projeto, clique em **Enable**. O site já carrega os scripts da Vercel no build de produção; os dados aparecem depois das primeiras visitas (bloqueadores de anúncio escondem parte delas). As salas aparecem agrupadas como `/sala/[codigo]` e `/concurso/[codigo]`.
+
+## Testar antes de publicar (preview)
+
+Todo push numa branch diferente da `main` gera um deploy de **preview**, com URL própria (no painel da Vercel e no pull request), sem mexer no site oficial.
+
+1. Crie a branch no padrão `flores/<tipo>/<descricao-em-kebab-case>` (ex.: `flores/feat/vercel-insights`) e faça o push.
+2. Teste no celular pela URL de preview (é `https`, então a câmera funciona).
+3. Abra o pull request para a `main`; o merge publica em produção.
+
+Preview e produção usam o mesmo Firebase: as salas de teste ficam no mesmo banco, com códigos aleatórios que não se misturam, e as regras do Firestore valem para os dois. Por padrão a Vercel pede login nas URLs de preview (Deployment Protection); para testar no celular de outras pessoas, gere um link de compartilhamento do deploy.
 
 ## Arquitetura
 
@@ -90,7 +101,7 @@ src/
 
 ## Commits
 
-Seguimos [Conventional Commits](https://www.conventionalcommits.org/pt-br/), só com o título e em inglês: `tipo(escopo): descrição`.
+Seguimos [Conventional Commits](https://www.conventionalcommits.org/pt-br/), só com o título e em inglês: `tipo(escopo): descrição`. Branches no padrão `flores/<tipo>/<descricao-em-kebab-case>`.
 Tipos usados: `feat`, `fix`, `refactor`, `style`, `docs`, `test`, `chore`, `ci`. Ex.: `feat(meeting): add voting timer`.
 
 O GitHub Actions roda tipos, lint, formatação, testes e build a cada push na `main` e em pull requests.
