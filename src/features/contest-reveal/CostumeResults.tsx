@@ -14,6 +14,8 @@ import { Podium } from './Podium'
 import { VoteBreakdown } from './VoteBreakdown'
 import './contestReveal.css'
 
+const GROUP_CONTEST_ENABLED = false
+
 interface CostumeResultsProps {
   contest: Contest
   players: Player[]
@@ -43,7 +45,7 @@ export function CostumeResults({ contest, players, myId }: CostumeResultsProps) 
       </header>
       <Podium scores={costumeRanking(contest)} players={players} />
       <VoteBreakdown title={copy.whoVotedWhom} rows={rows} emptyLabel={copy.didNotVote} />
-      {isContestHost(contest, myId) && canStartGroupContest(contest) && (
+      {GROUP_CONTEST_ENABLED && isContestHost(contest, myId) && canStartGroupContest(contest) && (
         <div className="dock">
           {action.error && <p className="error center">{action.error}</p>}
           <button
