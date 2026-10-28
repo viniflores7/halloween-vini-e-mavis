@@ -40,7 +40,7 @@ src/
 │   ├── contest/             # /concurso/:código: lobby e escolha da tela de cada etapa
 │   ├── costume-voting/      # Desfile dos participantes, voto 1º/2º/3º e quem falta votar
 │   ├── contest-reveal/      # Apuração, suspense, pódio e quem votou em quem
-│   └── group-contest/       # Surpresa, montagem e votação das duplas e trios
+│   └── group-contest/       # Surpresa, montagem e votação das duplas e trios (desativado no resultado)
 │
 ├── content/                 # Textos editáveis, sem lógica
 ├── data/                    # Acesso a dados
